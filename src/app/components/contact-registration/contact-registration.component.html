@@ -1,1 +1,51 @@
-<p>contact-registration works!</p>
+<div class="flex flex-col gap-20">
+  <h1 class="self-center text-4xl">Adicionar contato</h1>
+  <div class="flex justify-center" *ngIf="isLoadingRegistration">
+    <img src="assets/gifs/loading.webp" width="50">
+  </div>
+  <form [formGroup]="contactForm" (ngSubmit)="onSubmit()" *ngIf="!isLoadingRegistration">
+    <div class="flex flex-col gap-20">
+      <div class="flex flex-col gap-10">
+        <div class="flex w-full justify-evenly">
+          <div class="flex flex-col">
+            <div class="flex">
+              <label for="name">Nome:</label>
+              <span class="text-xs text-red-600">*</span>
+            </div>
+            <input formControlName="name" type="text" id="name" class="bg-gray-50 border border-gray-300 text-gray-900 text-sm rounded-lg focus:ring-blue-500 focus:border-blue-500 block w-full p-2.5" required />
+            <p *ngIf="hasSubmitted && contactForm.get('name')?.errors && contactForm.get('name')?.errors!['required']" class="text-xs text-red-600">Nome é obrigatório</p>
+          </div>
+          <div class="flex flex-col">
+            <div class="flex">
+              <label for="email">Email:</label>
+              <span class="text-xs text-red-600">*</span>
+            </div>
+            <input formControlName="email" type="text" id="email" class="bg-gray-50 border border-gray-300 text-gray-900 text-sm rounded-lg focus:ring-blue-500 focus:border-blue-500 block w-full p-2.5" required />
+            <p *ngIf="hasSubmitted && contactForm.get('email')?.errors && contactForm.get('email')?.errors!['required']" class="text-xs text-red-600">Email é obrigatório</p>
+          </div>
+        </div>
+        <div class="flex w-full justify-evenly">
+          <div class="flex flex-col">
+            <div class="flex">
+              <label for="cellPhone">Celular:</label>
+              <span class="text-xs text-red-600">*</span>
+            </div>
+            <input formControlName="cellPhone" [maxLength]="11" [minLength]="11"  type="text" id="cellPhone" class="bg-gray-50 border border-gray-300 text-gray-900 text-sm rounded-lg focus:ring-blue-500 focus:border-blue-500 block w-full p-2.5" required />
+            <p *ngIf="hasSubmitted && contactForm.get('cellPhone')?.errors && contactForm.get('cellPhone')?.errors!['required']" class="text-xs text-red-600">Celular é obrigatório</p>
+            <p *ngIf="hasSubmitted && contactForm.get('cellPhone')?.errors && contactForm.get('cellPhone')?.errors!['minlength']" class="text-xs text-red-600">Celular deve ter 11 caracteres</p>
+            <p *ngIf="phoneAlreadyExists" class="text-xs text-red-600">Celular já foi cadastrado</p>
+          </div>
+          <div class="flex flex-col">
+            <label for="telephone">Telefone:</label>
+            <input formControlName="telephone" [maxLength]="10" [minLength]="10" type="text" id="telephone" class="bg-gray-50 border border-gray-300 text-gray-900 text-sm rounded-lg focus:ring-blue-500 focus:border-blue-500 block w-full p-2.5" />
+            <p *ngIf="hasSubmitted && contactForm.get('telephone')?.errors && contactForm.get('telephone')?.errors!['minlength']" class="text-xs text-red-600">Telefone deve ter 10 caracteres</p>
+          </div>
+        </div>
+      </div>
+      <div class="flex justify-center gap-10">
+        <button (click)="cancelRegistration()" type="submit" class="self-center cursor-pointer submit-button text-white bg-red-400 hover:bg-red-800 focus:ring-4 focus:outline-none focus:ring-blue-300 font-medium rounded-lg text-sm px-5 py-2.5 text-center">Cancelar</button>
+        <button  type="submit" class="self-center cursor-pointer submit-button text-white bg-blue-400 hover:bg-blue-800 focus:ring-4 focus:outline-none focus:ring-blue-300 font-medium rounded-lg text-sm px-5 py-2.5 text-center">Adicionar</button>
+      </div>
+    </div>
+  </form>
+</div>

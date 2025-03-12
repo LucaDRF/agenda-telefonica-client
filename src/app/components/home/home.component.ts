@@ -1,4 +1,4 @@
-import { Component } from '@angular/core';
+import { Component, signal } from '@angular/core';
 import { ContactListComponent } from './contact-list/contact-list.component';
 import { NgClass } from '@angular/common';
 import { Router } from '@angular/router';
@@ -10,12 +10,12 @@ import { Router } from '@angular/router';
   styleUrl: './home.component.css'
 })
 export class HomeComponent {
-  public isFilteredByFavourite: boolean = false;
+  public isFilteredByFavouriteSignal = signal(false);
 
   constructor(public router: Router) {}
 
   activateFilter() {
-    this.isFilteredByFavourite = !this.isFilteredByFavourite;
+    this.isFilteredByFavouriteSignal.update(() => !this.isFilteredByFavouriteSignal());
   }
 
   registerContact() {

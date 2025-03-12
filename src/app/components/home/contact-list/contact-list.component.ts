@@ -1,5 +1,5 @@
 import { NgClass, NgFor, NgIf } from '@angular/common';
-import { Component, Input, OnInit } from '@angular/core';
+import { ChangeDetectionStrategy, Component, computed, Input, OnInit } from '@angular/core';
 import { Contact } from '../../../models/contact.model';
 import { ContactService } from '../../../services/contact.service';
 import { Router } from '@angular/router';
@@ -8,14 +8,21 @@ import { Router } from '@angular/router';
   selector: 'app-contact-list',
   imports: [NgFor, NgIf, NgClass],
   templateUrl: './contact-list.component.html',
+  // changeDetection: ChangeDetectionStrategy.OnPush,
   styleUrl: './contact-list.component.css'
 })
 export class ContactListComponent implements OnInit {
-  @Input()
+  @Input() isFilteredByFavourite!: boolean;
   public isLoadingList = false;
   public contacts: Contact[] = [];
+  @Input() value!: number;
+
 
   constructor(private contactService: ContactService, private router: Router) { }
+
+  ngOnChanges() {
+    this.listContacts();
+  }
 
   ngOnInit(): void {
     this.isLoadingList = true;
@@ -23,6 +30,24 @@ export class ContactListComponent implements OnInit {
     this.contactService.getContacts().subscribe((contacts: Contact[]) => {
       this.contacts = contacts;
       this.isLoadingList = false;
+    });
+  }
+
+  listContacts() {
+    this.isLoadingList = true;
+
+    if (this.isFilteredByFavourite) {
+      this.contactService.getFavouriteContacts().subscribe((contacts: Contact[]) => {
+        this.isLoadingList = false;
+        this.contacts = contacts;
+      });
+
+      return;
+    }
+
+    this.contactService.getContacts().subscribe((contacts: Contact[]) => {
+      this.isLoadingList = false;
+      this.contacts = contacts;
     });
   }
 
